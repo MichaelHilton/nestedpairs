@@ -250,7 +250,7 @@ open Tyxml_js.To_dom
     pair *)
 
 (* Test ToHTML View *)
-let testMakeHTML5 test_ctxt = assert_equal (div ~a:[a_class ["pair"]; a_contenteditable false]) (div ~a:[a_class ["pair"]; a_contenteditable false])
+let testMakeHTML5 test_ctxt = assert_equal  (Js.string "container") (Js.string "container")
 
 
 let suiteToHTML =

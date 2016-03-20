@@ -2,6 +2,8 @@ module X = Tyxml_js.Html5
 module Html = Dom_html
 module ToDom = Tyxml_js.To_dom
 
+open Dom_html
+
 module JsUtil = struct 
   exception OptFail
   let getOpt x = Js.Opt.get x (fun _ -> raise OptFail)
@@ -94,12 +96,17 @@ let source_link = X.(
 ) in 
 (* Convert hello to a DOM element and append it to body *)
 let append_div parent div = Dom.appendChild parent (ToDom.of_div div) in 
+let newLine _ = Dom_html.createBr document in 
 Html.window##onload <- (Html.handler (fun ev -> 
     List.iter (append_div body) [
       instructions; 
       source_link];
-    let rootPair = Pair.newPair "" in 
-    Dom.appendChild container rootPair;
-    HtmlUtil.focus (rootPair##firstChild);
+    let body = 
+      Js.Opt.get (document##getElementById (Js.string "container")) 
+    (fun () -> assert false)
+    in
+    (* let rootPair = Pair.newPair "" in  *)
+    Dom.appendChild body (newLine ());
+    (* HtmlUtil.focus (rootPair##firstChild); *)
     Js._true
   ))
