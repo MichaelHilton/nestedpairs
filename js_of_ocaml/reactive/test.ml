@@ -1,5 +1,5 @@
 open OUnit2;;
-open Index.NestedPairs
+open NestedPairs.NestedPairs
 (* Install OUnit via opam first *)
 
 open HExp
@@ -182,6 +182,7 @@ let testAddNumber14 test_ctxt = assert_equal  (Pair ((Val 3),(Val 7))) (HExp.con
 
 
 
+
 let suite =
 "suite">:::
  ["test1">:: test1;
@@ -236,6 +237,35 @@ let suite =
   ]
 ;;
 
+
+open Tyxml_js.Html5
+open Dom_html
+open Tyxml_js.To_dom
+(* let pair = ToDom.of_div X.(
+      div ~a:[a_class ["pair"]; a_contenteditable false] []
+    ) in 
+    Dom.appendChild pair (leftHole left_contents);
+    Dom.appendChild pair (separator ());
+    Dom.appendChild pair (rightHole ());
+    pair *)
+
+(* Test ToHTML View *)
+let testMakeHTML5 test_ctxt = assert_equal (div ~a:[a_class ["pair"]; a_contenteditable false]) (div ~a:[a_class ["pair"]; a_contenteditable false])
+
+
+let suiteToHTML =
+"suiteToHTML">:::
+ ["testMakeHTML5">:: testMakeHTML5;
+  ]
+;;
+
+
+
+
+
+
+
 let () =
-  run_test_tt_main suite
+  run_test_tt_main suite;;
+  run_test_tt_main suiteToHTML
 ;;
