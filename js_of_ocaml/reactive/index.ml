@@ -67,6 +67,20 @@ end
     pair
 end *)
 
+open NestedPairs
+open NestedPairs.HExp
+open NestedPairs.Sel
+open NestedPairs.Models
+
+module SV = StringView(AbsBModel)
+(* 
+let  BModelStringView = StringView (AbsBModel) in  *)
+
+let byId doc id =
+  let node = doc##getElementById (Js.string id) in
+  Js.Opt.get node (fun () -> assert false)
+
+
 (* Find the initial elements *)
 let body = Html.getElementById "body" in 
 let container = Html.getElementById "container" in 
@@ -106,7 +120,13 @@ Html.window##onload <- (Html.handler (fun ev ->
     (fun () -> assert false)
     in
     (* let rootPair = Pair.newPair "" in  *)
-    Dom.appendChild body (newLine ());
+    (* (* let *) BModelStringView = StringView AbsBModel in *)
+    let testHole = Hole "test" in
+    let testPair = Pair (testHole,testHole) in
+    let hexpSel5 = HSel.(InFst (InHole {startIdx=1; endIdx=2})) in 
+    let bmodel5 = BModel.make (testPair,hexpSel5) in 
+    Dom.appendChild body (SV.view (AbsBModel.of_b bmodel5));
+    (* (byId "container")##innerHTML <- Js.string "test"; *)
     (* HtmlUtil.focus (rootPair##firstChild); *)
     Js._true
   ))
