@@ -72,18 +72,11 @@ open NestedPairs.HExp
 open NestedPairs.Sel
 open NestedPairs.Models
 
-module SV = StringView(AbsBModel)
-(* 
-let  BModelStringView = StringView (AbsBModel) in  *)
-
-let byId doc id =
-  let node = doc##getElementById (Js.string id) in
-  Js.Opt.get node (fun () -> assert false)
-
+  module BModelStringView = NestedPairs.StringView (AbsBModel)
 
 (* Find the initial elements *)
-let body = Html.getElementById "body" in 
-let container = Html.getElementById "container" in 
+let body = Html.getElementById "body" 
+(* let container = Html.getElementById "container" in *)
 (* instructions *)
 let instruction keybinding meaning = X.(
   div ~a:[a_class ["instruction"]] [
@@ -111,6 +104,7 @@ let source_link = X.(
 (* Convert hello to a DOM element and append it to body *)
 let append_div parent div = Dom.appendChild parent (ToDom.of_div div) in 
 let newLine _ = Dom_html.createBr document in 
+(* let newDiv str = Dom_html.createDiv document in *)
 Html.window##onload <- (Html.handler (fun ev -> 
     List.iter (append_div body) [
       instructions; 
@@ -119,13 +113,32 @@ Html.window##onload <- (Html.handler (fun ev ->
       Js.Opt.get (document##getElementById (Js.string "container")) 
     (fun () -> assert false)
     in
-    (* let rootPair = Pair.newPair "" in  *)
+    (* let rootPair = NestedPairs.HExp.Pair.newPair "" in  *)
     (* (* let *) BModelStringView = StringView AbsBModel in *)
     let testHole = Hole "test" in
+    let emptyHole = Hole "" in
     let testPair = Pair (testHole,testHole) in
-    let hexpSel5 = HSel.(InFst (InHole {startIdx=1; endIdx=2})) in 
-    let bmodel5 = BModel.make (testPair,hexpSel5) in 
-    Dom.appendChild body (SV.view (AbsBModel.of_b bmodel5));
+    let nestedPair = Pair (Pair (testHole,testHole),emptyHole) in 
+    let nestedNestedPair = Pair (nestedPair,testHole) in 
+    let hexpSel = HSel.(InFst (OutPair Left)) in 
+    let bmodel1 = BModel.make (nestedPair,hexpSel) in 
+
+  
+
+    
+
+    (* let hexpSel5 = HSel.(InFst (InHole {startIdx=1; endIdx=2})) in  *)
+
+  let d = Dom_html.window##document in
+  let span = Dom_html.createDiv d in
+  span##classList##add(Js.string "cl");
+  Dom.appendChild body (d##createTextNode (Js.string  (BModelStringView.viewHExp nestedNestedPair) ));
+  (* Dom.appendChild output span *)
+
+
+    (* let bmodel5 = BModel.make (testPair,hexpSel5) in  *)
+    Dom.appendChild body (newLine ());
+    Dom.appendChild body (newLine ());
     (* (byId "container")##innerHTML <- Js.string "test"; *)
     (* HtmlUtil.focus (rootPair##firstChild); *)
     Js._true

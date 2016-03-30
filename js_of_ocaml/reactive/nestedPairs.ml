@@ -523,11 +523,16 @@ module NestedPairs = struct
     let rec view (model : Model.t) : string =
         viewZ (Model.to_z model)
   end
+  module SV = StringView(Models.AbsBModel)
+
 
   module ReactiveStringView(Model : Models.ABSMODEL) = struct 
     (* make an action stream *)
     (* make a model stream that reacts to action stream *)
     (* make a view stream that reacts to model stream *)
   end
+
 end 
+
+
 
